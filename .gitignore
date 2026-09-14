@@ -1,0 +1,7 @@
+# MATLAB autosave / temporary files
+*.asv
+*.m~
+
+# OS files
+.DS_Store
+Thumbs.db

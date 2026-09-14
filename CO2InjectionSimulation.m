@@ -1,44 +1,84 @@
 mrstModule add ad-core ad-blackoil mrst-gui
 
-G = cartGrid([60, 40], [600, 400]);  % 10x10m cells
+%% Grid
+nx = 60;
+ny = 40;
+
+G = cartGrid([nx, ny], [600, 400]);   % 10 m x 10 m cells
 G = computeGeometry(G);
 
-rock.poro = 0.2 * ones(G.cells.num, 1);
+%% Rock
+rock.poro = 0.20 * ones(G.cells.num, 1);
 rock.perm = 100 * milli*darcy * ones(G.cells.num, 1);
 
+%% Fluid
 fluid = initSimpleADIFluid('phases', 'WOG', ...
-    'mu', [1, 5, 0.05]*centi*poise, ...   % water, oil, gas (CO2)
-    'rho', [1000, 700, 600], ...         % density [water, oil, CO2]
-    'n', [2, 2, 2]);
+    'mu',  [1, 5, 0.05] * centi*poise, ...
+    'rho', [1000, 700, 600], ...
+    'n',   [2, 2, 2]);
 
-state0 = initResSol(G, 100*barsa, [0 1 0]);  % [Sw So Sg]
+%% Initial state: oil-filled reservoir
+state0 = initResSol(G, 100*barsa, [0 1 0]);   % [Sw So Sg]
+
+%% Wells
+% addWell expects linear cell indices. Use sub2ind to place wells at
+% opposite logical corners of the 60 x 40 grid.
+injCell  = sub2ind([nx, ny], 1, 1);
+prodCell = sub2ind([nx, ny], nx, ny);
 
 W = [];
 
-% Injector (CO2) at top-left
-W = addWell(W, G, rock, [1, 1], ...
-    'Type', 'rate', 'Val', 100*meter^3/day, ...
-    'Comp_i', [0 0 1], 'Name', 'CO2_Injector');
+W = addWell(W, G, rock, injCell, ...
+    'Type', 'rate', ...
+    'Val', 100 * meter^3/day, ...
+    'Comp_i', [0 0 1], ...
+    'Name', 'CO2_Injector');
 
-% Producer at bottom-right
-W = addWell(W, G, rock, [60, 40], ...
-    'Type', 'bhp', 'Val', 50*barsa, ...
-    'Comp_i', [0 1 0], 'Name', 'Producer');
+W = addWell(W, G, rock, prodCell, ...
+    'Type', 'bhp', ...
+    'Val', 50 * barsa, ...
+    'Comp_i', [0 1 0], ...
+    'Name', 'Producer');
 
-T = 100*day;
-n = 10;
-dT = repmat(T/n, [1, n]);
+%% Schedule
+T = 100 * day;
+nSteps = 10;
+dt = repmat(T/nSteps, [1, nSteps]);
 
-schedule = simpleSchedule(dT, 'W', W);
+schedule = simpleSchedule(dt, 'W', W);
 
+%% Model and simulation
 model = ThreePhaseBlackOilModel(G, rock, fluid, 'gas', true);
 
-[~, states] = simulateScheduleAD(state0, model, schedule);
+[wellSols, states] = simulateScheduleAD(state0, model, schedule); %#ok<ASGLU>
 
+%% Plot gas saturation through time
 for i = 1:numel(states)
     clf;
-    plotCellData(G, states{i}.s(:,3));  % gas saturation
-    title(['CO₂ Saturation at Time Step ', num2str(i)]);
+    plotCellData(G, states{i}.s(:, 3));
+    axis equal tight;
+    title(sprintf('Gas Saturation at Time Step %d', i));
+    xlabel('x [m]');
+    ylabel('y [m]');
     colorbar;
     drawnow;
 end
+
+%% Save final timestep figure
+scriptDir = fileparts(mfilename('fullpath'));
+imageDir = fullfile(scriptDir, 'images');
+
+if ~exist(imageDir, 'dir')
+    mkdir(imageDir);
+end
+
+finalFig = figure('Visible', 'off');
+plotCellData(G, states{end}.s(:, 3));
+axis equal tight;
+title(sprintf('Gas Saturation at Time Step %d', numel(states)));
+xlabel('x [m]');
+ylabel('y [m]');
+colorbar;
+
+saveas(finalFig, fullfile(imageDir, 'co2_saturation_t10.png'));
+close(finalFig);
