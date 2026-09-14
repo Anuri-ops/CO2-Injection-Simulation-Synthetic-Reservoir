@@ -1,6 +1,6 @@
 # CO₂ Injection Simulation – Synthetic Oil Reservoir
 
-This project simulates **gas injection represented as CO₂ into a 2D synthetic oil reservoir** using the MATLAB Reservoir Simulation Toolbox (MRST). It tracks the gas-saturation front over time and serves as a simple base case for gas-injection / enhanced-oil-recovery (EOR) workflow practice.
+This project simulates gas injection represented as CO₂ into a 2D synthetic oil reservoir using the MATLAB Reservoir Simulation Toolbox (MRST). It tracks the gas-saturation front over time and serves as a simple base case for gas-injection / enhanced-oil-recovery (EOR) workflow practice.
 
 > **Scope note:** this is an oil-filled reservoir with a three-phase water–oil–gas formulation, not a saline-aquifer CO₂ storage model. The injected gas is represented with fixed fluid properties in an immiscible black-oil formulation. CO₂–brine dissolution, residual trapping, structural trapping, compositional effects and geochemical reactions are not modelled.
 
@@ -134,7 +134,7 @@ images/co2_saturation_t10.png
 
 ## Purpose
 
-This is a **project-level reservoir-simulation exercise** built to develop practical MRST workflow competence. It is not presented as a calibrated field model or research result.
+This is a project-level reservoir-simulation exercise built to develop practical MRST workflow competence. It is not presented as a calibrated field model or research result.
 
 Possible extensions include:
 
