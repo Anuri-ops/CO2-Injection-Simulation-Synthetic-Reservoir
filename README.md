@@ -1,6 +1,6 @@
 # CO₂ Injection Simulation – Synthetic Oil Reservoir
 
-This project simulates gas injection represented as CO₂ into a 2D synthetic oil reservoir using the MATLAB Reservoir Simulation Toolbox (MRST). It tracks the gas-saturation front over time and serves as a simple base case for gas-injection / enhanced-oil-recovery (EOR) workflow practice.
+This project simulates **gas injection represented as CO₂ into a 2D synthetic oil reservoir** using the MATLAB Reservoir Simulation Toolbox (MRST). It tracks the gas-saturation front over time and serves as a simple base case for gas-injection / enhanced-oil-recovery (EOR) workflow practice.
 
 > **Scope note:** this is an oil-filled reservoir with a three-phase water–oil–gas formulation, not a saline-aquifer CO₂ storage model. The injected gas is represented with fixed fluid properties in an immiscible black-oil formulation. CO₂–brine dissolution, residual trapping, structural trapping, compositional effects and geochemical reactions are not modelled.
 
@@ -20,8 +20,8 @@ To build practical familiarity with:
 
 ## Tools and Framework
 
-- **MRST version:** 2025a
-- **Modules:** `ad-core`, `ad-blackoil`, `mrst-gui`
+- **MRST version:** 2026a
+- **Modules:** `ad-core`, `ad-props`, `ad-blackoil`, `mrst-gui`
 - **Model:** `ThreePhaseBlackOilModel`
 - **Simulation engine:** `simulateScheduleAD`
 - **Language:** MATLAB
@@ -98,17 +98,19 @@ model = ThreePhaseBlackOilModel(G, rock, fluid, 'gas', true);
 
 The workflow visualises the evolution of gas saturation through the 100-day simulation.
 
-The final-timestep image should be regenerated after running the corrected script. The script saves it as:
+A successful test run in MATLAB R2025a with MRST 2026a completed all 10 control steps. The script saves the final-timestep gas-saturation figure as:
 
 ```text
 images/co2_saturation_t10.png
 ```
 
+![Gas saturation at timestep 10](images/co2_saturation_t10.png)
+
 ---
 
 ## How to Run
 
-1. Install MRST 2025a.
+1. Install and initialise MRST 2026a (the repository was tested with MATLAB R2025a).
 2. Place this repository somewhere writable.
 3. Run `CO2InjectionSimulation.m`.
 4. The script loads the required MRST modules, runs the schedule, displays the gas-saturation evolution and saves the final-timestep figure in `images/`.
@@ -132,7 +134,7 @@ images/co2_saturation_t10.png
 
 ## Purpose
 
-This is a project-level reservoir-simulation exercise built to develop practical MRST workflow competence. It is not presented as a calibrated field model or research result.
+This is a **project-level reservoir-simulation exercise** built to develop practical MRST workflow competence. It is not presented as a calibrated field model or research result.
 
 Possible extensions include:
 

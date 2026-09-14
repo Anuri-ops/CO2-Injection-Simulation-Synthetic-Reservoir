@@ -1,4 +1,4 @@
-mrstModule add ad-core ad-blackoil mrst-gui
+mrstModule add ad-core ad-props ad-blackoil mrst-gui
 
 %% Grid
 nx = 60;
