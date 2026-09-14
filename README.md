@@ -132,7 +132,7 @@ images/co2_saturation_t10.png
 
 ## Purpose
 
-This is a **project-level reservoir-simulation exercise** built to develop practical MRST workflow competence. It is not presented as a calibrated field model or research result.
+This is a project-level reservoir-simulation exercise built to develop practical MRST workflow competence. It is not presented as a calibrated field model or research result.
 
 Possible extensions include:
 
